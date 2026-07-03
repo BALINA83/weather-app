@@ -1,0 +1,22 @@
+{
+  "name": "WeatherNow",
+  "short_name": "WeatherNow",
+  "description": "Weather app with real-time forecast, radar and air quality",
+  "start_url": "/weather-app/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#38bdf8",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/weather-app/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/weather-app/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
