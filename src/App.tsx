@@ -464,10 +464,27 @@ try {
 } catch {
   airQualityValue = 0;
 } 
+let locationCity = text.myLocation;
+let locationCountry = '';
+
+try {
+  const locationResponse = await fetch(
+    `https://geocoding-api.open-meteo.com/v1/reverse?latitude=${latitude}&longitude=${longitude}&language=en&format=json`
+  );
+
+  const locationData = await locationResponse.json();
+  const currentPlace = locationData.results?.[0];
+
+  locationCity = currentPlace?.name || text.myLocation;
+  locationCountry = currentPlace?.country || '';
+} catch {
+  locationCity = text.myLocation;
+  locationCountry = '';
+}
  
     setWeather({
-      city: 'Your location',
-      country: '',
+    city: locationCity,
+country: locationCountry,
       latitude,
       longitude,
       temperature: weatherData.current.temperature_2m,
