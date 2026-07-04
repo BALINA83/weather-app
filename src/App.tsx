@@ -32,6 +32,13 @@ type WeatherData = {
   hourly: HourlyForecast[];
   
 };
+type CitySuggestion = {
+  id: number;
+  name: string;
+  country: string;
+  latitude: number;
+  longitude: number;
+};
 
 type AppLanguage = 'en' | 'ru' | 'uk';
 
@@ -372,6 +379,42 @@ function App() {
   const [city, setCity] = useState(() => {
   return localStorage.getItem('weather-city') || 'Zagreb';
 });
+const [suggestions, setSuggestions] = useState<CitySuggestion[]>([]);
+const getCitySuggestions = async (value: string) => {
+  setCity(value);
+
+  if (value.trim().length < 2) {
+    setSuggestions([]);
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(
+        value
+      )}&count=5&language=en&format=json`
+    );
+
+    const data = await response.json();
+
+    if (!data.results) {
+      setSuggestions([]);
+      return;
+    }
+
+    setSuggestions(
+      data.results.map((place: any) => ({
+        id: place.id,
+        name: place.name,
+        country: place.country,
+        latitude: place.latitude,
+        longitude: place.longitude,
+      }))
+    );
+  } catch {
+    setSuggestions([]);
+  }
+};
   const [country, setCountry] = useState(() => {
   return localStorage.getItem('weather-country') || 'Croatia';
 });
@@ -822,8 +865,25 @@ setSelectedDate(weatherData.current.time.slice(0, 10));
     type="text"
    placeholder={text.cityPlaceholder}
     value={city}
-    onChange={(event) => setCity(event.target.value)}
+    onChange={(event) => getCitySuggestions(event.target.value)}
   />
+  {suggestions.length > 0 && (
+  <div className="suggestions">
+    {suggestions.map((suggestion) => (
+      <button
+        type="button"
+        key={suggestion.id}
+        onClick={() => {
+          setCity(suggestion.name);
+          setCountry(suggestion.country);
+          setSuggestions([]);
+        }}
+      >
+        {suggestion.name}, {suggestion.country}
+      </button>
+    ))}
+  </div>
+)}
 
   <input
     type="text"
