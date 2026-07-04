@@ -464,23 +464,29 @@ try {
 } catch {
   airQualityValue = 0;
 } 
+
 let locationCity = text.myLocation;
 let locationCountry = '';
 
 try {
   const locationResponse = await fetch(
-    `https://geocoding-api.open-meteo.com/v1/reverse?latitude=${latitude}&longitude=${longitude}&language=en&format=json`
+    `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
   );
 
   const locationData = await locationResponse.json();
-  const currentPlace = locationData.results?.[0];
 
-  locationCity = currentPlace?.name || text.myLocation;
-  locationCountry = currentPlace?.country || '';
+  locationCity =
+    locationData.city ||
+    locationData.locality ||
+    locationData.principalSubdivision ||
+    text.myLocation;
+
+  locationCountry = locationData.countryName || '';
 } catch {
   locationCity = text.myLocation;
   locationCountry = '';
 }
+  
  
     setWeather({
     city: locationCity,
