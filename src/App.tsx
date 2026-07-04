@@ -861,29 +861,33 @@ setSelectedDate(weatherData.current.time.slice(0, 10));
 </div>  
 
       <form className="search-form" onSubmit={getWeather}>
+ 
+<div className="city-field">
   <input
     type="text"
-   placeholder={text.cityPlaceholder}
+    placeholder={text.cityPlaceholder}
     value={city}
     onChange={(event) => getCitySuggestions(event.target.value)}
   />
+
   {suggestions.length > 0 && (
-  <div className="suggestions">
-    {suggestions.map((suggestion) => (
-      <button
-        type="button"
-        key={suggestion.id}
-        onClick={() => {
-          setCity(suggestion.name);
-          setCountry(suggestion.country);
-          setSuggestions([]);
-        }}
-      >
-        {suggestion.name}, {suggestion.country}
-      </button>
-    ))}
-  </div>
-)}
+    <div className="suggestions">
+      {suggestions.map((suggestion) => (
+        <button
+          type="button"
+          key={suggestion.id}
+          onClick={() => {
+            setCity(suggestion.name);
+            setCountry(suggestion.country);
+            setSuggestions([]);
+          }}
+        >
+          {suggestion.name}, {suggestion.country}
+        </button>
+      ))}
+    </div>
+  )}
+</div>
 
   <input
     type="text"
